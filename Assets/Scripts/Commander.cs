@@ -11,6 +11,11 @@ public class Commander : NetworkBehaviour
         public static short Hello = MsgType.Highest + 1;
     };
 
+    public class HelloMessage : MessageBase
+    {
+        public string hello;
+    }
+
     void Start()
     {
         SetupServer();
@@ -26,6 +31,9 @@ public class Commander : NetworkBehaviour
     void OnServerReadyToBeginMessage(NetworkMessage netMsg)
     {
         var beginMessage = netMsg.ReadMessage<StringMessage>();
-        Debug.Log("received OnServerReadyToBeginMessage " + beginMessage.value);
+        Debug.Log("Server " + beginMessage.value);
+        HelloMessage msg = new HelloMessage();
+        msg.hello = "hero";
+        netMsg.conn.Send(MyMsgType.Hello, msg);
     }
 }

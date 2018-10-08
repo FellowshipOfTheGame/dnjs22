@@ -34,6 +34,7 @@ public class Army : MonoBehaviour
     {
         myClient = new NetworkClient();
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
+        myClient.RegisterHandler(MyMsgType.Hello, PrintReturn);
         myClient.Connect("127.0.0.1", 4444);
     }
 
@@ -41,6 +42,12 @@ public class Army : MonoBehaviour
     {
         myClient = ClientScene.ConnectLocalServer();
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
+    }
+
+    void PrintReturn(NetworkMessage netMsg)
+    {
+        var beginMessage = netMsg.ReadMessage<StringMessage>();
+        Debug.Log("Client " + beginMessage.value);
     }
 
     public void OnConnected(NetworkMessage netMsg)
