@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class UIActions : MonoBehaviour {
 
+	[SerializeField] private GameObject CurrentScreen;
+	[SerializeField] private GameObject CurrentWindow;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -14,12 +17,14 @@ public class UIActions : MonoBehaviour {
 		
 	}
 
-	public void OpenPanel(){
-
+	public void ChangeScreen(GameObject screen){
+		CurrentScreen?.SetActive(false);
+		screen.SetActive(true);
+		CurrentScreen = screen;
 	}
 
-	public void ToggleWindow(){
-
+	public void ToggleWindow(GameObject window){
+		window.SetActive(!window.activeSelf);
 	}
 
 	public void MuteSound(){
