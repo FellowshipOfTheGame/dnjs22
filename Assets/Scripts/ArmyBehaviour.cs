@@ -20,7 +20,7 @@ public class ArmyBehaviour : MonoBehaviour
     {
         myClient = new NetworkClient();
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
-        myClient.RegisterHandler(MyMsgType.Command, PrintReturn);
+        // myClient.RegisterHandler(MyMsgType.MessageCommand, PrintReturn);
         myClient.Connect("127.0.0.1", 4444);
     }
 
@@ -30,20 +30,20 @@ public class ArmyBehaviour : MonoBehaviour
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
     }
 
-    void PrintReturn(NetworkMessage netMsg)
-    {
-        string beginMessage = netMsg.ReadMessage<StringMessage>().value;
-        Command msg = JsonConvert.DeserializeObject<Command>(beginMessage);
-        Debug.Log("Client\nIssue: " + msg.issue + "\nPlayer Id: " + msg.player + "\nTeam name: " + msg.troop.team.name);
-    }
+    // void PrintReturn(NetworkMessage netMsg)
+    // {
+    //     string beginMessage = netMsg.ReadMessage<StringMessage>().value;
+    //     MessageCommand msg = JsonConvert.DeserializeObject<MessageCommand>(beginMessage);
+    //     Debug.Log("Client\nIssue: " + msg.issue + "\nPlayer Id: " + msg.player + "\nTeam name: " + msg.troop.team.name);
+    // }
 
     public void OnConnected(NetworkMessage netMsg)
     {
         Debug.Log("Connected");
-        Command msg = new Command();
+        MessageCommand msg = new MessageCommand();
         msg.issue = DateTime.Now;
         msg.player = 1;
-        msg.troop = new Troop(40, new Team("lui", 255, 0, 0, 255));
-        myClient.Send(MyMsgType.Command, new StringMessage(JsonConvert.SerializeObject(msg)));
+        msg.troop = new Troop(40, new Team("lui", new Vector4(255, 0, 0, 255)));
+        myClient.Send(MyMsgType.MessageCommand, new StringMessage(JsonConvert.SerializeObject(msg)));
     }
 }

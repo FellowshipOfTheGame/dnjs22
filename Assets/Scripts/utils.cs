@@ -4,36 +4,23 @@ using UnityEngine.Networking;
 
 public static class MyMsgType
 {
-    public static short Command = MsgType.Highest + 1;
+    public static short MessageCommand = MsgType.Highest + 1;
+    public static short CommandAddedSuccesfull = MsgType.Highest + 1;
 };
+
+public class MessageCommand
+{
+    public DateTime issue;
+    public Troop troop;
+    public int player;
+    public int target;
+}
 
 public class Command
 {
     public DateTime issue;
-    public int player;
+    public double cost;
     public Troop troop;
-}
-
-public class Troop
-{
-    public int units;
-    public Team team;
-
-    public Troop(int units, Team team)
-    {
-        this.units = units;
-        this.team = team;
-    }
-}
-
-public class Team
-{
-    public string name;
-    public Vector4 color;
-
-    public Team(string name, int r, int g, int b, int a)
-    {
-        this.name = name;
-        this.color = new Vector4(r, g, b, a);
-    }
+    public int player;
+    public int target;
 }
