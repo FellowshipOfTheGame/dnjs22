@@ -4,26 +4,12 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.Text;
 using UnityEngine.Networking.NetworkSystem;
+using System;
+using Newtonsoft.Json;
 
-public class Army : MonoBehaviour
+public class ArmyBehaviour : MonoBehaviour
 {
-    public class MyMsgType
-    {
-        public static short Hello = MsgType.Highest + 1;
-    };
-
-    public class HelloMessage : MessageBase
-    {
-        public string hello;
-    }
-
     NetworkClient myClient;
-    //With the @ before the string, we can split a long string in many lines without getting errors
-    private string json = @"{
-		'hello':'world', 
-		'foo':'bar', 
-		'count':25
-	}";
 
     void Start()
     {
@@ -34,7 +20,7 @@ public class Army : MonoBehaviour
     {
         myClient = new NetworkClient();
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
-        myClient.RegisterHandler(MyMsgType.Hello, PrintReturn);
+        myClient.RegisterHandler(MyMsgType.Command, PrintReturn);
         myClient.Connect("127.0.0.1", 4444);
     }
 
@@ -46,15 +32,18 @@ public class Army : MonoBehaviour
 
     void PrintReturn(NetworkMessage netMsg)
     {
-        var beginMessage = netMsg.ReadMessage<StringMessage>();
-        Debug.Log("Client " + beginMessage.value);
+        string beginMessage = netMsg.ReadMessage<StringMessage>().value;
+        Command msg = JsonConvert.DeserializeObject<Command>(beginMessage);
+        Debug.Log("Client\nIssue: " + msg.issue + "\nPlayer Id: " + msg.player + "\nTeam name: " + msg.troop.team.name);
     }
 
     public void OnConnected(NetworkMessage netMsg)
     {
         Debug.Log("Connected");
-        HelloMessage msg = new HelloMessage();
-        msg.hello = json;
-        myClient.Send(MyMsgType.Hello, msg);
+        Command msg = new Command();
+        msg.issue = DateTime.Now;
+        msg.player = 1;
+        msg.troop = new Troop(40, new Team("lui", 255, 0, 0, 255));
+        myClient.Send(MyMsgType.Command, new StringMessage(JsonConvert.SerializeObject(msg)));
     }
 }
