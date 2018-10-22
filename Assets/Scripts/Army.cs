@@ -7,6 +7,8 @@ using UnityEngine.Networking.NetworkSystem;
 
 public class Army : MonoBehaviour
 {
+	private Team myTeam = new Team ("TestTeam", Color.red, 0, 0);
+
     public class MyMsgType
     {
         public static short Hello = MsgType.Highest + 1;
@@ -33,8 +35,8 @@ public class Army : MonoBehaviour
     public void SetupClient()
     {
         myClient = new NetworkClient();
-        myClient.RegisterHandler(MsgType.Connect, OnConnected);
-        myClient.RegisterHandler(MyMsgType.Hello, PrintReturn);
+		myClient.RegisterHandler(MsgType.Connect, OnConnected);
+		myClient.RegisterHandler(MyMsgType.Hello, PrintReturn);
         myClient.Connect("127.0.0.1", 4444);
     }
 
@@ -57,4 +59,17 @@ public class Army : MonoBehaviour
         msg.hello = json;
         myClient.Send(MyMsgType.Hello, msg);
     }
+
+	private void SendTroop(){
+		//Test variables
+		System.DateTime start = System.DateTime.Now;
+		int id = 0;
+		int type = 0;
+		int player = 0;
+		int destiny = Random.Range (0, 10);
+		int units = 5;
+		Troop troop = new Troop (units, myTeam);
+		//Test variables
+		Command command = new Command (start, id, type, player, troop, destiny);
+	}
 }
