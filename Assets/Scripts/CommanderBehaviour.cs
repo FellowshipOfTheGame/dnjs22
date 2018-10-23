@@ -17,8 +17,25 @@ public class CommanderBehaviour : MonoBehaviour
     void Start()
     {
         onHold = new List<Command>();
+
+        int[,] dist = new int[,] {
+            { 0, 0, 1 },
+            { 1, 0, 1 },
+            { 0, 1, 0 }
+        };
+
+        Tower[] towers = new Tower[] {
+            new Tower(),
+            new Tower(),
+            new Tower()
+        };
+
+        Region[] regions = new Region[] {
+            new Region()
+        };
+
+        map = new Map(dist, towers, regions);
         SetupServer();
-        //map = new Map();
     }
 
     void Update()
@@ -43,24 +60,18 @@ public class CommanderBehaviour : MonoBehaviour
         timer += Time.deltaTime;
     }
 
-    int PutOnHold(MessageCommand cmd)
+    int PutOnHold(Command cmd)
     {
         // Verify message command
         // Return error
 
-        Command hold = new Command();
-        hold.issue = cmd.issue;
-        hold.player = cmd.player;
-        hold.target = cmd.target;
-        hold.troop = cmd.troop;
+        onHold.Add(cmd);
 
-        // Check command cost
-        hold.cost = 10f;
+        return MyMsgType.CommandAddedSuccesfull;
+    }
 
-        Debug.Log(hold.issue);
-
-        onHold.Add(hold);
-
+    int BuyTroop(MessageCommand msg)
+    {
         return MyMsgType.CommandAddedSuccesfull;
     }
 
@@ -76,14 +87,30 @@ public class CommanderBehaviour : MonoBehaviour
         string beginMessage = netMsg.ReadMessage<StringMessage>().value;
         MessageCommand msg = JsonConvert.DeserializeObject<MessageCommand>(beginMessage);
 
-        if (PutOnHold(msg) == MyMsgType.CommandAddedSuccesfull)
+        if (msg.type == 0)
         {
-            Debug.Log("Server\nIssue: " + msg.issue + "\nPlayer Id: " + msg.player + "\nTroop size: " + msg.troop.Units);
-            // msg = new MessageCommand();
-            // msg.issue = DateTime.Now;
-            // msg.player = 0;
-            // msg.troop = new Troop(20, new Team("rodrigo", 255, 255, 255, 255));
-            // netMsg.conn.Send(MyMsgType.MessageCommand, new StringMessage(JsonConvert.SerializeObject(msg)));
+            Command hold = new Command();
+            hold.issue = msg.issue;
+            hold.player = msg.player;
+            hold.target = msg.target;
+            hold.troop = msg.troop;
+
+            // Check command cost
+            hold.cost = 10;
+
+            if (PutOnHold(hold) == MyMsgType.CommandAddedSuccesfull)
+            {
+                netMsg.conn.Send(MyMsgType.AddedSuccesfull, new IntegerMessage(hold.cost));
+            }
         }
+        else if (msg.type == 1)
+        {
+            if (BuyTroop(msg) == MyMsgType.CommandAddedSuccesfull)
+            {
+                // Return player money
+                netMsg.conn.Send(MyMsgType.AddedSuccesfull, new IntegerMessage(30));
+            }
+        }
+
     }
 }
