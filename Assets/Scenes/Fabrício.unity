@@ -149,6 +149,21 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 296397337}
     m_Modifications:
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224045734483041522, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -243,12 +258,12 @@ Prefab:
         type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1570254417}
+      objectReference: {fileID: 944136996}
     - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
         type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1846660255}
+      objectReference: {fileID: 0}
     - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
         type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -259,6 +274,82 @@ Prefab:
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 944136996}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StopDragging
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StopDragging
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].eventID
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1570254417}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_TypeName
+      value: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI, Version=1.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114166979717099288, guid: 8f7c48b69a862fa4c94fe048ba3d3307,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1846660255}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7c48b69a862fa4c94fe048ba3d3307, type: 2}
   m_IsPrefabAsset: 0
@@ -459,17 +550,6 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1570254417}
-          m_MethodName: ToggleWindow
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1846660255}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 944136996}
           m_MethodName: StopDragging
           m_Mode: 1
@@ -493,6 +573,23 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1570254417}
+          m_MethodName: ToggleWindow
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1846660255}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -2258,17 +2355,6 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1570254417}
-          m_MethodName: ToggleWindow
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1846660255}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 944136996}
           m_MethodName: StopDragging
           m_Mode: 1
@@ -2292,6 +2378,23 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1570254417}
+          m_MethodName: ToggleWindow
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1846660255}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -2386,17 +2489,6 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1570254417}
-          m_MethodName: ToggleWindow
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1846660255}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 944136996}
           m_MethodName: StopDragging
           m_Mode: 1
@@ -2420,6 +2512,23 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1570254417}
+          m_MethodName: ToggleWindow
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1846660255}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -3160,17 +3269,6 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1570254417}
-          m_MethodName: ToggleWindow
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1846660255}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 944136996}
           m_MethodName: StopDragging
           m_Mode: 1
@@ -3194,6 +3292,23 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1570254417}
+          m_MethodName: ToggleWindow
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1846660255}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
