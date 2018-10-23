@@ -108,7 +108,7 @@ public class CommanderBehaviour : MonoBehaviour
             if (BuyTroop(msg) == MyMsgType.CommandAddedSuccesfull)
             {
                 // Return player money
-                netMsg.conn.Send(MyMsgType.AddedSuccesfull, new IntegerMessage(30));
+                netMsg.conn.Send(MyMsgType.BoughtSuccesfull, new IntegerMessage(30));
             }
         }
 
