@@ -12,7 +12,7 @@ public class MessageCommand
 {
     public DateTime issue;
     public Troop troop;
-    public int player;
+    public string player;
     public int target;
 }
 
@@ -21,6 +21,6 @@ public class Command
     public DateTime issue;
     public double cost;
     public Troop troop;
-    public int player;
+    public string player;
     public int target;
 }

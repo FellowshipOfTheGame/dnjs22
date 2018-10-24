@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class MapActions : MonoBehaviour {
 
-	public GameObject selectedBase = null;
 	public GameObject troopsWindow;
 	public UIActions MenuManager;
 

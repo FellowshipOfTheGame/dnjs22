@@ -11,6 +11,10 @@ public class ArmyBehaviour : MonoBehaviour
 {
     NetworkClient myClient;
 
+    [SerializeField] private UIActions MenuManager;
+    [SerializeField] private string UniqueID;
+    [SerializeField] private Team MyTeam;
+
     void Start()
     {
         SetupClient();
@@ -22,6 +26,7 @@ public class ArmyBehaviour : MonoBehaviour
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
         // myClient.RegisterHandler(MyMsgType.MessageCommand, PrintReturn);
         myClient.Connect("127.0.0.1", 4444);
+        UniqueID = SystemInfo.deviceUniqueIdentifier;
     }
 
     public void SetupLocalClient()
@@ -40,10 +45,24 @@ public class ArmyBehaviour : MonoBehaviour
     public void OnConnected(NetworkMessage netMsg)
     {
         Debug.Log("Connected");
+        MenuManager.ToggleLoadingScreen();
+    }
+
+    public void BuyTroop(){
+        print("BOUGHT 1 TROOP");
         MessageCommand msg = new MessageCommand();
         msg.issue = DateTime.Now;
-        msg.player = 1;
-        msg.troop = new Troop(40, new Team("lui", new Vector4(255, 0, 0, 255)));
+        msg.player = UniqueID;
+        msg.troop = new Troop(1, MyTeam);
+        myClient.Send(MyMsgType.MessageCommand, new StringMessage(JsonConvert.SerializeObject(msg)));
+    }
+
+    public void SendTroop(int troopNum){
+        print("SENT " + troopNum + " TROOPS");
+        MessageCommand msg = new MessageCommand();
+        msg.issue = DateTime.Now;
+        msg.player = UniqueID;
+        msg.troop = new Troop(troopNum, MyTeam);
         myClient.Send(MyMsgType.MessageCommand, new StringMessage(JsonConvert.SerializeObject(msg)));
     }
 }

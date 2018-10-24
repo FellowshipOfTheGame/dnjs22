@@ -142,6 +142,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &48337380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 48337381}
+  - component: {fileID: 48337382}
+  m_Layer: 0
+  m_Name: Client
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &48337381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 48337380}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1547694792}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &48337382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 48337380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70cf65b15354d754084d6bb18a96a015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MenuManager: {fileID: 1570254417}
+  UniqueID: 
 --- !u!1001 &86511206
 Prefab:
   m_ObjectHideFlags: 0
@@ -1341,12 +1383,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1570254417}
-        m_MethodName: ToggleWindow
-        m_Mode: 2
+      - m_Target: {fileID: 48337382}
+        m_MethodName: BuyTroop
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 141706524}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2138,7 +2180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Store
+  m_Text: BUY TROOP
 --- !u!222 &1019850509
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2883,7 +2925,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f93541b7522b26f478c9e060ae249921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedBase: {fileID: 0}
   troopsWindow: {fileID: 1846660255}
   MenuManager: {fileID: 1570254417}
 --- !u!1 &1250683061
@@ -3488,9 +3529,54 @@ Transform:
   m_Children:
   - {fileID: 1570254416}
   - {fileID: 1246533309}
+  - {fileID: 48337381}
+  - {fileID: 1549844085}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1549844084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549844085}
+  - component: {fileID: 1549844086}
+  m_Layer: 0
+  m_Name: MoneyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1549844085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1549844084}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1547694792}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1549844086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1549844084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b939819c3fceac4e9a94e03886d44e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentMoney: 0
+  MoneyPerSecond: 1
+  MenuManager: {fileID: 1570254417}
 --- !u!1 &1570254415
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,6 +3619,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentScreen: {fileID: 839462878}
   CurrentWindow: {fileID: 0}
+  LoadingScreen: {fileID: 2105804531}
+  MoneyText: {fileID: 121908777}
+  TroopsText: {fileID: 1790811625}
 --- !u!1 &1656508677
 GameObject:
   m_ObjectHideFlags: 0
@@ -4382,12 +4471,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1570254417}
-        m_MethodName: ToggleWindow
-        m_Mode: 2
+      - m_Target: {fileID: 48337382}
+        m_MethodName: SendTroop
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 1846660255}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
