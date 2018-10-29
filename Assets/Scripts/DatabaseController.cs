@@ -1,0 +1,143 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DatabaseController : MonoBehaviour {
+
+	private string connection = "http://localhost/dnjs22/Connection.php";
+	private string login = "http://localhost/dnjs22/Login.php?";
+	private string registerPlayer = "http://localhost/dnjs22/RegisterPlayer.php?";
+	private string playerExists = "http://localhost/dnjs22/PlayerExists.php?";
+	private string registerTeam = "http://localhost/dnjs22/RegisterTeam.php?";
+	private string registerTower = "http://localhost/dnjs22/RegisterTower.php?";
+	private string registerEdge = "http://localhost/dnjs22/RegisterEdge.php?";
+
+	// Use this for initialization
+	void Start () {
+		StartCoroutine (RegisterPlayer ("Gabriel", "123"));
+		StartCoroutine (Login ("Gabriel", "123"));
+		StartCoroutine (PlayerExists ("Gabriel"));
+		StartCoroutine (RegisterTeam ("Team2", "Red"));
+		StartCoroutine (RegisterTower (-1, -1));
+		StartCoroutine (RegisterEdge (1, 2, 3));
+	}
+	
+	private IEnumerator Login(string user, string password){
+		// Post message
+		string url = login + "user=" + WWW.EscapeURL (user) + "&pswd=" + WWW.EscapeURL (password);
+		WWW wLogin = new WWW (url);
+		yield return wLogin;
+
+		if (wLogin.error != null)	// Some error
+			Debug.Log ("Error at login");
+		else {
+			if (wLogin.text != "") {
+				Debug.Log (wLogin.text);
+				string[] result = wLogin.text.Split (new string[] {"|"}, StringSplitOptions.None);
+				int id = 0, money = 0, idTeam = 0;
+				//Get datas
+				int.TryParse (result [0], out id);
+				DateTime lastLogin = Convert.ToDateTime (result [1]);
+				int.TryParse (result [2], out money);
+				string playerPassword = result [3];
+				int.TryParse (result [4], out idTeam);
+				string playerUser = result [5];
+
+				//TODO Update lastLogin value
+				//TODO Send player datas to client
+				Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
+			} else // null result
+				Debug.Log ("Player not found.");
+		}
+	}
+
+	private IEnumerator RegisterPlayer(string user, string password){
+		//TODO Allocate player to a team
+		string url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
+			+ WWW.EscapeURL(DateTime.Now.ToString());
+		WWW wRegister = new WWW (url);
+		yield return wRegister;
+
+		if (wRegister.error != null)
+			Debug.Log ("Error at register.");
+		else {
+			if (wRegister.text == "Success") {
+				Debug.Log ("Register successfull");
+			} else {
+				//Debug.Log ("Error on DB.");
+				Debug.Log("Possibly success. Check database.");
+			}
+		}
+	}
+
+	private IEnumerator PlayerExists(string user){
+		string url = playerExists + "user=" + WWW.EscapeURL (user);
+		WWW wPlayerExists = new WWW (url);
+		yield return wPlayerExists;
+
+		if (wPlayerExists.error != null)
+			Debug.Log ("Error at request.");
+		else {
+			if (wPlayerExists.text == "True")
+				Debug.Log ("Player exists");
+			else
+				Debug.Log ("Player doesn't exist");
+		}
+	}
+
+	private IEnumerator RegisterTeam(string name, string color){
+		string url = registerTeam + "name=" + WWW.EscapeURL (name) + "&color=" + WWW.EscapeURL (color);
+		WWW wRegisterTeam = new WWW (url);
+		yield return wRegisterTeam;
+
+		if (wRegisterTeam.error != null)
+			Debug.Log ("Error at register request.");
+		else {
+			if (wRegisterTeam.text == "Success")
+				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+
+	//If team id == -1, the tower doesn't have an owner team. 
+	// If unit == -1, the tower starts with 0 units.
+	private IEnumerator RegisterTower(int team, int unit){
+		string strTeam = team.ToString();
+		string strUnit = unit.ToString();
+
+		string url = registerTower + "team=" + WWW.EscapeURL (strTeam) + "&unit=" + WWW.EscapeURL (strUnit);
+		WWW wRegisterTower = new WWW (url);
+		yield return wRegisterTower;
+
+		if (wRegisterTower.error != null)
+			Debug.Log ("Error at register request.");
+		else {
+			if (wRegisterTower.text == "Success")
+				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+
+	private IEnumerator RegisterEdge(int firstSource, int secondSource, int cost){
+		string strFirstSource = firstSource.ToString();
+		string strSecondSource = secondSource.ToString();
+		string strCost = cost.ToString ();
+
+		string url = registerEdge + "first=" + WWW.EscapeURL (strFirstSource) + "&scnd=" + WWW.EscapeURL (strSecondSource)
+		             + "&cost=" + WWW.EscapeURL (strCost);
+		WWW wRegisterEdge = new WWW (url);
+		yield return wRegisterEdge;
+
+		if (wRegisterEdge.error != null)
+			Debug.Log ("Error at register request.");
+		else {
+			if (wRegisterEdge.text == "Success")
+				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+}
