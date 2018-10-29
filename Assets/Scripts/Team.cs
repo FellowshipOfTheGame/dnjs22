@@ -1,82 +1,82 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Team
 {
-	#region Attributes
+    #region Attributes
 
-	private string name;
-	private Color color;
-	private int id;
-	private int mainBase;
+    private string name;
+    private Vector4 color4;//int r, g, b, a;
+    private int id;
+    private Vector2 mainBase;
 
-	#endregion
+    #endregion
 
-	public Team(string name, Color color, int id, int mainBase){
-		this.name = name;
-		this.Color = color;
-		this.id = id;
-		this.mainBase = mainBase;
-	}
+    public Team(string name, Vector4 v)
+    {
+        this.name = name;
+        this.color4 = v;
+    }
 
-	#region Getters and Setters
+    #region Getters and Setters
 
-	public string Name{
-		get{
-			return name;
-		}
+    public string Name
+    {
+        get
+        {
+            return name;
+        }
 
-		set{
-			name = value;
-		}
-	}
+        set
+        {
+            name = value;
+        }
+    }
 
-	public Color Color{
-		get{
-			return color; 
-		}
+    public Vector4 Color4
+    {
+        get
+        {
+            return color4;
+        }
 
-		set{
-			color = value;
-		}
-	}
+        set
+        {
+            color4 = value;
+        }
+    }
 
-	public int Id{
-		get{
-			return id;
-		}
+    public int Id
+    {
+        get
+        {
+            return id;
+        }
 
-		set{
-			id = value;
-		}
-	}
+        set
+        {
+            id = value;
+        }
+    }
 
-	public Vector2 MainBase{
-		get{
-			return mainBase;
-		}
+    public Vector2 MainBase
+    {
+        get
+        {
+            return mainBase;
+        }
 
-		set{
-			mainBase = value;
-		}
-	}
+        set
+        {
+            mainBase = value;
+        }
+    }
 
-	#endregion
+    #endregion
 
-	#region Methods
+    #region Methods
 
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
 
-	#endregion
+    #endregion
 }
 
