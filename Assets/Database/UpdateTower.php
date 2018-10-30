@@ -1,6 +1,7 @@
 <?php
 	require 'Connection.php';
 	
+	$id = (int)mysqli_real_escape_string($conn, $_GET['id']);
 	$team = (int)mysqli_real_escape_string($conn, $_GET['team']);
 	$unit = (int)mysqli_real_escape_string($conn, $_GET['unit']);
 
@@ -15,9 +16,9 @@
 	}
 
 	if(is_null($team))
-		$sql = "INSERT INTO tower(team, unit) VALUES (null, $unit);";
+		$sql = "UPDATE tower set team = null, unit = $unit WHERE id = $id;";
 	else
-		$sql = "INSERT INTO tower(team, unit) VALUES ($team, $unit);";
+		$sql = "UPDATE tower set team = $team, unit = $unit WHERE id = $id;";
 	$result = mysqli_query($conn, $sql);
 
 	if(mysqli_affected_rows() > 0){

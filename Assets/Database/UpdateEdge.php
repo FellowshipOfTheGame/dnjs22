@@ -5,7 +5,7 @@
 	$second = (int)mysqli_real_escape_string($conn, $_GET['scnd']);
 	$cost = (int)mysqli_real_escape_string($conn, $_GET['cost']);
 
-	$sql = "INSERT INTO edge(firstSource, secondSource, cost) VALUES ($first, $second, $cost);";
+	$sql = "UPDATE edge SET cost = $cost WHERE (firstSource = $first AND secondSource = $second) OR (firstSource = $second AND secondSource = $first)";
 
 	$result = mysqli_query($conn, $sql);
 

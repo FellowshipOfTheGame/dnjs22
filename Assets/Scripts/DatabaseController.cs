@@ -12,6 +12,9 @@ public class DatabaseController : MonoBehaviour {
 	private string registerTeam = "http://localhost/dnjs22/RegisterTeam.php?";
 	private string registerTower = "http://localhost/dnjs22/RegisterTower.php?";
 	private string registerEdge = "http://localhost/dnjs22/RegisterEdge.php?";
+	private string updateEdge = "http://localhost/dnjs22/UpdateEdge.php?";
+	private string updateTower = "http://localhost/dnjs22/UpdateTower.php?";
+	private string getTower = "http://localhost/dnjs22/GetTower.php?";
 
 	// Use this for initialization
 	void Start () {
@@ -19,8 +22,11 @@ public class DatabaseController : MonoBehaviour {
 		StartCoroutine (Login ("Gabriel", "123"));
 		StartCoroutine (PlayerExists ("Gabriel"));
 		StartCoroutine (RegisterTeam ("Team2", "Red"));
-		StartCoroutine (RegisterTower (-1, -1));
-		StartCoroutine (RegisterEdge (1, 2, 3));
+		//StartCoroutine (RegisterTower (-1, -1));
+		//StartCoroutine (RegisterEdge (1, 1, 3));
+		StartCoroutine (UpdateEdge (1, 1, 5));
+		StartCoroutine (UpdateTower (1, 1, 20));
+		StartCoroutine (GetTower (1));
 	}
 	
 	private IEnumerator Login(string user, string password){
@@ -136,6 +142,69 @@ public class DatabaseController : MonoBehaviour {
 		else {
 			if (wRegisterEdge.text == "Success")
 				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+
+	private IEnumerator UpdateEdge(int firstSource, int secondSource, int cost){
+		string strFirstSource = firstSource.ToString();
+		string strSecondSource = secondSource.ToString();
+		string strCost = cost.ToString ();
+
+		string url = updateEdge + "first=" + WWW.EscapeURL (strFirstSource) + "&scnd=" + WWW.EscapeURL (strSecondSource)
+			+ "&cost=" + WWW.EscapeURL (strCost);
+		WWW wUpdateEdge = new WWW (url);
+		yield return wUpdateEdge;
+
+		if (wUpdateEdge.error != null)
+			Debug.Log ("Error at register request.");
+		else {
+			if (wUpdateEdge.text == "Success")
+				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+
+	private IEnumerator UpdateTower(int id, int team, int unit){
+		string strId = id.ToString ();
+		string strTeam = team.ToString();
+		string strUnit = unit.ToString();
+
+		string url = updateTower + "id=" + WWW.EscapeURL(strId) + "&team=" + WWW.EscapeURL (strTeam) + "&unit=" + WWW.EscapeURL (strUnit);
+		WWW wUpdateTower = new WWW (url);
+		yield return wUpdateTower;
+
+		if (wUpdateTower.error != null)
+			Debug.Log ("Error at register request.");
+		else {
+			if (wUpdateTower.text == "Success")
+				Debug.Log ("Register successfull");
+			else
+				Debug.Log ("Possibly success. Check database.");
+		}
+	}
+
+	private IEnumerator GetTower(int id){
+		string strId = id.ToString ();
+
+		string url = getTower + "id=" + WWW.EscapeURL(strId);
+		WWW wGetTower = new WWW (url);
+		yield return wGetTower;
+
+		if (wGetTower.error != null)
+			Debug.Log ("Error at get request.");
+		else {
+			if (wGetTower.text != "") {
+				string[] result = wGetTower.text.Split (new string[] {"|"}, StringSplitOptions.None);
+				int team = 0, unit = 0;
+
+				int.TryParse (result [0], out team);
+				int.TryParse(result[1], out unit);
+
+				Debug.Log ("id=" + id + " has: team=" + team + " unit=" + unit);
+			}
 			else
 				Debug.Log ("Possibly success. Check database.");
 		}

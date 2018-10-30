@@ -1,9 +1,9 @@
 <?php
 	require 'Connection.php';
 	
-	$userLogin = mysql_real_escape_string($_GET['user']);
-	$pswd = mysql_real_escape_string($_GET['pswd']);
-	$lastLogin = mysql_real_escape_string($_GET['lastLogin']);
+	$userLogin = mysqli_real_escape_string($conn, $_GET['user']);
+	$pswd = mysqli_real_escape_string($conn, $_GET['pswd']);
+	$lastLogin = mysqli_real_escape_string($conn, $_GET['lastLogin']);
 	$team = 1;
 
 	echo($lastLogin);

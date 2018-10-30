@@ -2,8 +2,8 @@
 	require 'Connection.php';
 	
 
-	$userLogin = mysql_real_escape_string($_GET['user']);
-	$pswd = mysql_real_escape_string($_GET['pswd']);
+	$userLogin = mysqli_real_escape_string($conn, $_GET['user']);
+	$pswd = mysqli_real_escape_string($conn, $_GET['pswd']);
 	//$userLogin = "Gabriel";
 	//$pswd = "123";
 

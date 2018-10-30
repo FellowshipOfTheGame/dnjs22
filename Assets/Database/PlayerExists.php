@@ -1,7 +1,7 @@
 <?php
 	require 'Connection.php';
 	
-	$userLogin = mysql_real_escape_string($_GET['user']);
+	$userLogin = mysqli_real_escape_string($conn, $_GET['user']);
 	
 	$sql = "SELECT * FROM player WHERE user = '$userLogin';";
 	$result = mysqli_query($conn, $sql);
