@@ -48,9 +48,25 @@ public class CommanderBehaviour : MonoBehaviour
         SetupServer();
 
 		StartCoroutine(Command ());
+
+		StartCoroutine (RegisterPLayer ("Rose", "111"));
+
+		DatabaseController db = new DatabaseController ();
+		StartCoroutine (db.PlayerExists ("Jeff"));
+		StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
     }
 
-	IEnumerator Command(){
+	private IEnumerator RegisterPLayer(string user, string password){
+		DatabaseController db = new DatabaseController ();
+		StartCoroutine (db.PlayerExists (user));
+		while (db.isRunningPlayerExists)
+			yield return null;
+		if(!db.playerExistsReturn){
+			StartCoroutine (db.RegisterPlayer(user, password));
+		}
+	}
+
+	private IEnumerator Command(){
 		DatabaseController db = new DatabaseController ();
 		Debug.Log ("Instantiated at commanderbehaviour");
 		int id = 0;
@@ -103,6 +119,10 @@ public class CommanderBehaviour : MonoBehaviour
         return MyMsgType.CommandAddedSuccesfull;
     }
 
+	int Login(MessageCommand msg){
+
+	}
+
     public void SetupServer()
     {
         NetworkServer.Listen(4444);
@@ -115,30 +135,30 @@ public class CommanderBehaviour : MonoBehaviour
         string beginMessage = netMsg.ReadMessage<StringMessage>().value;
         MessageCommand msg = JsonConvert.DeserializeObject<MessageCommand>(beginMessage);
 
-        if (msg.type == 0)
-        {
-            Command hold = new Command();
-            hold.issue = msg.issue;
-            hold.player = msg.player;
-            hold.target = msg.target;
-            hold.troop = msg.troop;
+		if (msg.type == 0) {
+			Command hold = new Command ();
+			hold.issue = msg.issue;
+			hold.player = msg.player;
+			hold.target = msg.target;
+			hold.troop = msg.troop;
 
-            // Check command cost
-            hold.cost = 10;
+			// Check command cost
+			hold.cost = 10;
 
-            if (PutOnHold(hold) == MyMsgType.CommandAddedSuccesfull)
-            {
-                netMsg.conn.Send(MyMsgType.AddedSuccesfull, new IntegerMessage(hold.cost));
-            }
-        }
-        else if (msg.type == 1)
-        {
-            if (BuyTroop(msg) == MyMsgType.CommandAddedSuccesfull)
-            {
-                // Return player money
-                netMsg.conn.Send(MyMsgType.BoughtSuccesfull, new IntegerMessage(30));
-            }
-        }
-
+			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
+				netMsg.conn.Send (MyMsgType.AddedSuccesfull, new IntegerMessage (hold.cost));
+			}
+		} else if (msg.type == 1) {
+			if (BuyTroop (msg) == MyMsgType.CommandAddedSuccesfull) {
+				// Return player money
+				netMsg.conn.Send (MyMsgType.BoughtSuccesfull, new IntegerMessage (30));
+			}
+		} else if (msg.type == 2) {
+			Command hold = new Command ();
+			hold.
+			if(Login(msg) == MyMsgType.CommandAddedSuccesfull){
+				netMsg.conn.Send(MyMsgType.LoginSuccessfull, new )
+			}
+		}
     }
 }

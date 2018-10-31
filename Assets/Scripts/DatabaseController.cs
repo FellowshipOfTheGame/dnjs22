@@ -21,6 +21,9 @@ public class DatabaseController{
 	public bool isRunningLogin = false;
 	public int idReturn = -1;
 
+	public bool isRunningPlayerExists = false;
+	public bool playerExistsReturn = false;
+
 	/*
 	public Coroutine coroutine { get; private set; }
 	public object result;
@@ -118,9 +121,11 @@ public class DatabaseController{
 	}
 
 	public IEnumerator RegisterPlayer(string user, string password){
+		DateTime dt = DateTime.Now;
+		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
 		//TODO Allocate player to a team
 		string url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
-			+ WWW.EscapeURL(DateTime.Now.ToString());
+			+ WWW.EscapeURL(strDate);
 		WWW wRegister = new WWW (url);
 		yield return wRegister;
 
@@ -136,7 +141,8 @@ public class DatabaseController{
 		}
 	}
 
-	private IEnumerator PlayerExists(string user){
+	public IEnumerator PlayerExists(string user){
+		isRunningPlayerExists = true;
 		string url = playerExists + "user=" + WWW.EscapeURL (user);
 		WWW wPlayerExists = new WWW (url);
 		yield return wPlayerExists;
@@ -144,14 +150,18 @@ public class DatabaseController{
 		if (wPlayerExists.error != null)
 			Debug.Log ("Error at request.");
 		else {
-			if (wPlayerExists.text == "True")
+			if (wPlayerExists.text == "True") {
+				playerExistsReturn = true;
 				Debug.Log ("Player exists");
-			else
+			} else {
+				playerExistsReturn = false;
 				Debug.Log ("Player doesn't exist");
+			}
 		}
+		isRunningPlayerExists = false;
 	}
 
-	private IEnumerator RegisterTeam(string name, string color){
+	public IEnumerator RegisterTeam(string name, string color){
 		string url = registerTeam + "name=" + WWW.EscapeURL (name) + "&color=" + WWW.EscapeURL (color);
 		WWW wRegisterTeam = new WWW (url);
 		yield return wRegisterTeam;
@@ -168,7 +178,7 @@ public class DatabaseController{
 
 	//If team id == -1, the tower doesn't have an owner team. 
 	// If unit == -1, the tower starts with 0 units.
-	private IEnumerator RegisterTower(int team, int unit){
+	public IEnumerator RegisterTower(int team, int unit){
 		string strTeam = team.ToString();
 		string strUnit = unit.ToString();
 
@@ -186,7 +196,7 @@ public class DatabaseController{
 		}
 	}
 
-	private IEnumerator RegisterEdge(int firstSource, int secondSource, int cost){
+	public IEnumerator RegisterEdge(int firstSource, int secondSource, int cost){
 		string strFirstSource = firstSource.ToString();
 		string strSecondSource = secondSource.ToString();
 		string strCost = cost.ToString ();
@@ -206,7 +216,7 @@ public class DatabaseController{
 		}
 	}
 
-	private IEnumerator UpdateEdge(int firstSource, int secondSource, int cost){
+	public IEnumerator UpdateEdge(int firstSource, int secondSource, int cost){
 		string strFirstSource = firstSource.ToString();
 		string strSecondSource = secondSource.ToString();
 		string strCost = cost.ToString ();

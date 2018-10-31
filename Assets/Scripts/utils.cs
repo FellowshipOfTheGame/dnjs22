@@ -9,6 +9,8 @@ public static class MyMsgType
     public static short BoughtSuccesfull = MsgType.Highest + 3;
     public static short AddedSuccesfull = MsgType.Highest + 4;
 
+	public static short LoginSuccessfull = MsgType.Highest + 5;
+	public static short RegisterSuccessfull = MsgType.Highest + 6;
 };
 
 public class MessageCommand
@@ -19,6 +21,9 @@ public class MessageCommand
     public int buy;
     public int player;
     public int target;
+
+	public string user;
+	public string password;
 }
 
 public class Command
@@ -28,4 +33,7 @@ public class Command
     public int cost;
     public int player;
     public int target;
+
+	public string user;
+	public string password;
 }
