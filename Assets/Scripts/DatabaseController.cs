@@ -18,8 +18,10 @@ public class DatabaseController{
 
 	//public static DatabaseController instance = null;
 
-	public bool isRunningLogin = false;
-	public int idReturn = -1;
+	public bool isRunningLogin = false, isLoginSuccessfull = false;
+	public int idReturn = -1, teamReturn, moneyReturn;
+	public DateTime lastLoginReturn;
+
 
 	public bool isRunningPlayerExists = false;
 	public bool playerExistsReturn = false;
@@ -78,11 +80,13 @@ public class DatabaseController{
 	*/
 
 	public IEnumerator Login(string user, string password){
+		DateTime dt = DateTime.Now;
+		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
 		Debug.Log ("Entered login");
 		// Post message
 		isRunningLogin = true;
 		Debug.Log ("Is running login");
-		string url = login + "user=" + WWW.EscapeURL (user) + "&pswd=" + WWW.EscapeURL (password);
+		string url = login + "user=" + WWW.EscapeURL (user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" + WWW.EscapeURL(strDate);
 		WWW wLogin = new WWW (url);
 		yield return wLogin;
 		Debug.Log ("Yielded is over");
@@ -93,24 +97,25 @@ public class DatabaseController{
 			if (wLogin.text != "") {
 				Debug.Log (wLogin.text);
 				string[] result = wLogin.text.Split (new string[] {"|"}, StringSplitOptions.None);
-				int id = 0, money = 0, idTeam = 0;
+
 				//Get datas
-				int.TryParse (result [0], out id);
-				DateTime lastLogin;
+				int.TryParse (result [0], out idReturn);
+				//DateTime lastLogin;
+				/*
 				if(result[1] == "")
-					lastLogin = DateTime.Now;
-				else
-					lastLogin = Convert.ToDateTime (result [1]);
-				int.TryParse (result [2], out money);
+					lastLoginReturn = DateTime.Now;
+				else*/
+					lastLoginReturn = Convert.ToDateTime (result [1]);
+				int.TryParse (result [2], out moneyReturn);
 				string playerPassword = result [3];
-				int.TryParse (result [4], out idTeam);
+				int.TryParse (result [4], out teamReturn);
 				string playerUser = result [5];
 
 				//TODO Update lastLogin value
 				//TODO Send player datas to client
-				idReturn = id;
+				//idReturn = id;
 				isRunningLogin = false;
-				Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
+				//Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
 
 				//yield return "id = " + id;
 			} else // null result

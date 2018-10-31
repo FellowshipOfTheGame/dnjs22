@@ -54,6 +54,7 @@ public class CommanderBehaviour : MonoBehaviour
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.PlayerExists ("Jeff"));
 		StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
+		StartCoroutine(db.Login("Kamzu", "333"));
     }
 
 	private IEnumerator RegisterPLayer(string user, string password){
@@ -66,6 +67,26 @@ public class CommanderBehaviour : MonoBehaviour
 		}
 	}
 
+	private IEnumerator Login(string user, string password, NetworkMessage netMsg){
+		DatabaseController db = new DatabaseController ();
+		StartCoroutine (db.Login (user, password));
+		while (db.isRunningLogin)
+			yield return null;
+		if (db.isLoginSuccessfull) {
+			MessageCommand msg = new MessageCommand ();
+			msg.player = db.idReturn;
+			msg.password = password;
+			msg.team = db.teamReturn;
+			msg.money = db.moneyReturn;
+			msg.lastLogin = String.Format("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
+		}
+	}
+	/*
+	private FinishLogin(string user, string password){
+
+	}
+	*/
 	private IEnumerator Command(){
 		DatabaseController db = new DatabaseController ();
 		Debug.Log ("Instantiated at commanderbehaviour");
@@ -88,7 +109,11 @@ public class CommanderBehaviour : MonoBehaviour
         {
             for (int i = onHold.Count - 1; i >= 0; i--)
             {
-                if (DateTime.Now >= onHold[i].issue.AddSeconds(onHold[i].cost))
+				if (onHold [i].user != null && onHold [i].user != "" && onHold [i].password != null && onHold [i].password != "") {
+					StartCoroutine(Login (onHold [i].user, onHold [i].password, onHold[i].netMsg));
+				}
+
+				if (DateTime.Now >= onHold[i].issue.AddSeconds(onHold[i].cost))
                 {
                     // Run command
                     Debug.Log("Rodou o comando");
@@ -119,10 +144,11 @@ public class CommanderBehaviour : MonoBehaviour
         return MyMsgType.CommandAddedSuccesfull;
     }
 
+	/*
 	int Login(MessageCommand msg){
 
 	}
-
+	*/
     public void SetupServer()
     {
         NetworkServer.Listen(4444);
@@ -155,9 +181,12 @@ public class CommanderBehaviour : MonoBehaviour
 			}
 		} else if (msg.type == 2) {
 			Command hold = new Command ();
-			hold.
-			if(Login(msg) == MyMsgType.CommandAddedSuccesfull){
-				netMsg.conn.Send(MyMsgType.LoginSuccessfull, new )
+			hold.player = msg.player;
+			hold.password = msg.password;
+			hold.netMsg = netMsg;
+
+			if(PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull){
+				netMsg.conn.Send (MyMsgType.LoginSuccessfull, new IntegerMessage (1));
 			}
 		}
     }

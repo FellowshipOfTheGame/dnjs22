@@ -24,6 +24,9 @@ public class MessageCommand
 
 	public string user;
 	public string password;
+	public int team;
+	public string lastLogin;
+	public int money;
 }
 
 public class Command
@@ -36,4 +39,5 @@ public class Command
 
 	public string user;
 	public string password;
+	public NetworkMessage netMsg;
 }
