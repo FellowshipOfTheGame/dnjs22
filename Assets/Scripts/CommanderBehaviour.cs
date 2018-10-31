@@ -14,6 +14,16 @@ public class CommanderBehaviour : MonoBehaviour
     private double timer = 0;
     private Map map;
 
+	//public GameObject databaseController;
+
+	/*
+	void Awake(){
+		/*
+		if (DatabaseController.instance == null)
+			Instantiate (databaseController);
+		
+	}*/
+
     void Start()
     {
         onHold = new List<Command>();
@@ -36,7 +46,25 @@ public class CommanderBehaviour : MonoBehaviour
 
         map = new Map(dist, towers, regions);
         SetupServer();
+
+		StartCoroutine(Command ());
     }
+
+	IEnumerator Command(){
+		DatabaseController db = new DatabaseController ();
+		Debug.Log ("Instantiated at commanderbehaviour");
+		int id = 0;
+		Debug.Log ("id = 0 at commanderbehaviour");
+		StartCoroutine (db.Login("Edson", "123"));
+		//StartCoroutine (Command (db));
+		Debug.Log ("Started coroutine at commanderbehaviour");
+		while (db.isRunningLogin) {
+			yield return null;
+			Debug.Log ("Loop waiting at commanderbehaviour");
+		}
+		id = db.idReturn;
+		Debug.Log ("id at commanderbehaviour = " + id);
+	}
 
     void Update()
     {

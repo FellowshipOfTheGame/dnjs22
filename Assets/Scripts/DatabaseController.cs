@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DatabaseController : MonoBehaviour {
+public class DatabaseController{
 
 	private string connection = "http://localhost/dnjs22/Connection.php";
 	private string login = "http://localhost/dnjs22/Login.php?";
@@ -16,8 +16,31 @@ public class DatabaseController : MonoBehaviour {
 	private string updateTower = "http://localhost/dnjs22/UpdateTower.php?";
 	private string getTower = "http://localhost/dnjs22/GetTower.php?";
 
+	//public static DatabaseController instance = null;
+
+	public bool isRunningLogin = false;
+	public int idReturn = -1;
+
+	/*
+	public Coroutine coroutine { get; private set; }
+	public object result;
+	private IEnumerator target;
+
+
+	void Awake(){
+		/*
+		if (instance == null)
+			instance = this;
+		else if (instance != this) 
+			Destroy (gameObject);
+
+		DontDestroyOnLoad (gameObject);
+
+	}*/
+
 	// Use this for initialization
 	void Start () {
+		/*
 		StartCoroutine (RegisterPlayer ("Gabriel", "123"));
 		StartCoroutine (Login ("Gabriel", "123"));
 		StartCoroutine (PlayerExists ("Gabriel"));
@@ -26,14 +49,40 @@ public class DatabaseController : MonoBehaviour {
 		//StartCoroutine (RegisterEdge (1, 1, 3));
 		StartCoroutine (UpdateEdge (1, 1, 5));
 		StartCoroutine (UpdateTower (1, 1, 20));
-		StartCoroutine (GetTower (1));
+		StartCoroutine (GetTower (1));*/
+
+		//CommandDB ();
 	}
-	
-	private IEnumerator Login(string user, string password){
+	/*
+	public DatabaseController(MonoBehaviour owner, IEnumerator target){
+		this.target = target;
+		this.coroutine = owner.StartCoroutine (Run ());
+	}
+
+	private IEnumerator Run(){
+		while (target.MoveNext ()) {
+			result = target.Current;
+			yield return result;
+		}
+	}
+
+	private IEnumerator CommandDB(){
+		DatabaseController db = new DatabaseController (this, RegisterPlayer ("Edson", "123"));
+		yield return db.coroutine;
+
+		Debug.Log ("At CommanderBehaviour: id = " + db.result);
+	}
+	*/
+
+	public IEnumerator Login(string user, string password){
+		Debug.Log ("Entered login");
 		// Post message
+		isRunningLogin = true;
+		Debug.Log ("Is running login");
 		string url = login + "user=" + WWW.EscapeURL (user) + "&pswd=" + WWW.EscapeURL (password);
 		WWW wLogin = new WWW (url);
 		yield return wLogin;
+		Debug.Log ("Yielded is over");
 
 		if (wLogin.error != null)	// Some error
 			Debug.Log ("Error at login");
@@ -44,7 +93,11 @@ public class DatabaseController : MonoBehaviour {
 				int id = 0, money = 0, idTeam = 0;
 				//Get datas
 				int.TryParse (result [0], out id);
-				DateTime lastLogin = Convert.ToDateTime (result [1]);
+				DateTime lastLogin;
+				if(result[1] == "")
+					lastLogin = DateTime.Now;
+				else
+					lastLogin = Convert.ToDateTime (result [1]);
 				int.TryParse (result [2], out money);
 				string playerPassword = result [3];
 				int.TryParse (result [4], out idTeam);
@@ -52,13 +105,19 @@ public class DatabaseController : MonoBehaviour {
 
 				//TODO Update lastLogin value
 				//TODO Send player datas to client
+				idReturn = id;
+				isRunningLogin = false;
 				Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
+
+				//yield return "id = " + id;
 			} else // null result
 				Debug.Log ("Player not found.");
 		}
+		Debug.Log ("Exit");
+		isRunningLogin = false;
 	}
 
-	private IEnumerator RegisterPlayer(string user, string password){
+	public IEnumerator RegisterPlayer(string user, string password){
 		//TODO Allocate player to a team
 		string url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
 			+ WWW.EscapeURL(DateTime.Now.ToString());
