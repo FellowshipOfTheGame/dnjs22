@@ -54,7 +54,7 @@ public class CommanderBehaviour : MonoBehaviour
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.PlayerExists ("Jeff"));
 		StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
-		StartCoroutine(db.Login("Kamzu", "333"));
+		StartCoroutine(Login("Kamzu", "42"));
     }
 
 	private IEnumerator RegisterPLayer(string user, string password){
@@ -67,7 +67,26 @@ public class CommanderBehaviour : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Login(string user, string password, NetworkMessage netMsg){
+	//Login: se o player existe, loga. Se não existe, registra e loga.
+	/*
+	private IEnumerator Login(string user, string password, NetworkMessage netMsg, int i){
+		DatabaseController db = new DatabaseController ();
+		StartCoroutine (db.PlayerExists (user));
+		while (db.isRunningPlayerExists)
+			yield return null;
+		if (db.playerExistsReturn) {
+			MessageCommand msg = new MessageCommand ();
+			msg.player = db.idReturn;
+			msg.password = password;
+			msg.team = db.teamReturn;
+			msg.money = db.moneyReturn;
+			msg.lastLogin = String.Format("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
+		}
+		onHold.RemoveAt (i);
+	}*/
+
+	private IEnumerator Login(string user, string password, NetworkMessage netMsg, int i){
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.Login (user, password));
 		while (db.isRunningLogin)
@@ -78,9 +97,21 @@ public class CommanderBehaviour : MonoBehaviour
 			msg.password = password;
 			msg.team = db.teamReturn;
 			msg.money = db.moneyReturn;
-			msg.lastLogin = String.Format("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			msg.lastLogin = String.Format ("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
+		} else {
+			StartCoroutine (db.RegisterPlayer (user, "42"));
+			while (db.isRunningRegisterPlayer)
+				yield return null;
+			
+			MessageCommand msg = new MessageCommand ();
+			msg.password = "42";
+			msg.team = db.teamReturn;
+			msg.money = db.moneyReturn;
+			msg.lastLogin = db.lastLoginReturn;
 			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
 		}
+		onHold.RemoveAt (i);
 	}
 	/*
 	private FinishLogin(string user, string password){
@@ -109,8 +140,8 @@ public class CommanderBehaviour : MonoBehaviour
         {
             for (int i = onHold.Count - 1; i >= 0; i--)
             {
-				if (onHold [i].user != null && onHold [i].user != "" && onHold [i].password != null && onHold [i].password != "") {
-					StartCoroutine(Login (onHold [i].user, onHold [i].password, onHold[i].netMsg));
+				if (onHold [i].user != null && onHold [i].user != "" /*&& onHold [i].password != null && onHold [i].password != ""*/) {
+					StartCoroutine(Login (onHold [i].user, onHold [i].password, onHold[i].netMsg, i));
 				}
 
 				if (DateTime.Now >= onHold[i].issue.AddSeconds(onHold[i].cost))
@@ -179,14 +210,23 @@ public class CommanderBehaviour : MonoBehaviour
 				// Return player money
 				netMsg.conn.Send (MyMsgType.BoughtSuccesfull, new IntegerMessage (30));
 			}
-		} else if (msg.type == 2) {
+		} else if (msg.type == 2) {	//Login
 			Command hold = new Command ();
 			hold.player = msg.player;
 			hold.password = msg.password;
 			hold.netMsg = netMsg;
 
-			if(PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull){
+			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
 				netMsg.conn.Send (MyMsgType.LoginSuccessfull, new IntegerMessage (1));
+			}
+		} else if (msg.type == 3) {	// Era pra register
+			Command hold = new Command ();
+			hold.player = msg.player;
+			hold.password = msg.password;
+			hold.netMsg = netMsg;
+
+			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
+				netMsg.conn.Send (MyMsgType.RegisterSuccessfull, new IntegerMessage (1));
 			}
 		}
     }

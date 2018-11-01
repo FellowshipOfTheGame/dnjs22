@@ -23,7 +23,7 @@ public class MessageCommand
     public int target;
 
 	public string user;
-	public string password;
+	public string password = "42";
 	public int team;
 	public string lastLogin;
 	public int money;
@@ -37,7 +37,8 @@ public class Command
     public int player;
     public int target;
 
+	//public int
 	public string user;
-	public string password;
+	public string password = "42";
 	public NetworkMessage netMsg;
 }
