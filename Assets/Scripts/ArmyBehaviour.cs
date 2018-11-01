@@ -25,7 +25,7 @@ public class ArmyBehaviour : MonoBehaviour
         myClient = new NetworkClient();
         myClient.RegisterHandler(MsgType.Connect, OnConnected);
         // myClient.RegisterHandler(MyMsgType.MessageCommand, PrintReturn);
-        myClient.Connect("127.0.0.1", 4444);
+        myClient.Connect("lessertest.eastus.cloudapp.azure.com", 4444);
         UniqueID = SystemInfo.deviceUniqueIdentifier;
     }
 

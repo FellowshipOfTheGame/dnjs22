@@ -13,11 +13,12 @@ public class GenerateMoney : MonoBehaviour {
 	void Start () {
 		//pega dinheiro atual
 		CurrentMoney = 0;
+		InvokeRepeating("GainMoney", 1f, 1f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		InvokeRepeating("GainMoney", 1f, 1f);
+		
 	}
 
 	void GainMoney(){

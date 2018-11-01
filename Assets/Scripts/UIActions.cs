@@ -11,6 +11,8 @@ public class UIActions : MonoBehaviour {
 	[SerializeField] private GameObject LoadingScreen;
 	[SerializeField] private Text MoneyText;
 	[SerializeField] private Text TroopsText;
+	private int money = 0;
+	private int troops = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -41,10 +43,12 @@ public class UIActions : MonoBehaviour {
 	}
 
 	public void UpdateMoneyText(int change){
-		MoneyText.text = (Int32.Parse(MoneyText.text) + change).ToString();
+		money += change;
+		MoneyText.text = "Money: " + money.ToString();
 	}
 
 	public void UpdateTroopsText(int change){
-		TroopsText.text = (Int32.Parse(TroopsText.text) + change).ToString();
+		troops += change;
+		TroopsText.text = "Troops: " + troops.ToString();
 	}
 }
