@@ -14,6 +14,8 @@ public class CommanderBehaviour : MonoBehaviour
     private double timer = 0;
     private Map map;
 
+	public UnityEngine.UI.Text DebugText;
+
 	//public GameObject databaseController;
 
 	/*
@@ -46,15 +48,6 @@ public class CommanderBehaviour : MonoBehaviour
 
         map = new Map(dist, towers, regions);
         SetupServer();
-
-		StartCoroutine(Command ());
-
-		StartCoroutine (RegisterPLayer ("Rose", "111"));
-
-		DatabaseController db = new DatabaseController ();
-		StartCoroutine (db.PlayerExists ("Jeff"));
-		StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
-		StartCoroutine(Login("Kamzu", "42"));
     }
 
 	private IEnumerator RegisterPLayer(string user, string password){
@@ -108,7 +101,7 @@ public class CommanderBehaviour : MonoBehaviour
 			msg.password = "42";
 			msg.team = db.teamReturn;
 			msg.money = db.moneyReturn;
-			msg.lastLogin = db.lastLoginReturn;
+			msg.lastLogin = String.Format ("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
 			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
 		}
 		onHold.RemoveAt (i);
@@ -121,17 +114,22 @@ public class CommanderBehaviour : MonoBehaviour
 	private IEnumerator Command(){
 		DatabaseController db = new DatabaseController ();
 		Debug.Log ("Instantiated at commanderbehaviour");
+		DebugText.text += "\nInstantiated at commanderbehaviour";
 		int id = 0;
 		Debug.Log ("id = 0 at commanderbehaviour");
+		DebugText.text += "\nid = 0 at commanderbehaviour";
 		StartCoroutine (db.Login("Edson", "123"));
 		//StartCoroutine (Command (db));
 		Debug.Log ("Started coroutine at commanderbehaviour");
+		DebugText.text += "\nStarted coroutine at commanderbehaviour";
 		while (db.isRunningLogin) {
 			yield return null;
 			Debug.Log ("Loop waiting at commanderbehaviour");
+			DebugText.text += "\nLoop waiting at commanderbehaviour";
 		}
 		id = db.idReturn;
 		Debug.Log ("id at commanderbehaviour = " + id);
+		DebugText.text += "\nid at commanderbehaviour = " + id;
 	}
 
     void Update()
@@ -148,11 +146,15 @@ public class CommanderBehaviour : MonoBehaviour
                 {
                     // Run command
                     Debug.Log("Rodou o comando");
+					DebugText.text += "\nRodou o comando";
+
                     onHold.RemoveAt(i);
                 }
                 else
                 {
                     Debug.Log("Não rodou");
+					DebugText.text += "\nNão rodou";
+
                 }
             }
             timer -= checkCommands;
@@ -185,6 +187,7 @@ public class CommanderBehaviour : MonoBehaviour
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MyMsgType.MessageCommand, OnServerReadyToBeginMessage);
         Debug.Log("Created server");
+		DebugText.text += "\nCreated server";
     }
 
     void OnServerReadyToBeginMessage(NetworkMessage netMsg)
