@@ -9,6 +9,11 @@ public class DatabaseController{
 	private string login = "http://localhost/dnjs22/Login.php?";
 	private string registerPlayer = "http://localhost/dnjs22/RegisterPlayer.php?";
 	private string playerExists = "http://localhost/dnjs22/PlayerExists.php?";
+	private string getPlayerMoney = "http://localhost/dnjs22/GetPlayerMoney.php?";
+	private string spendPlayerMoney = "http://localhost/dnjs22/SpendPlayerMoney.php?";
+	private string getPlayerLastLogin = "http://localhost/dnjs22/GetPlayerLastLogin.php?";
+	private string getPlayerData = "http://localhost/dnjs22/GetPlayerData.php?";
+	private string setPlayerLastLogin = "http://localhost/dnjs22/SetPlayerLastLogin.php?";
 	private string registerTeam = "http://localhost/dnjs22/RegisterTeam.php?";
 	private string registerTower = "http://localhost/dnjs22/RegisterTower.php?";
 	private string registerEdge = "http://localhost/dnjs22/RegisterEdge.php?";
@@ -58,7 +63,7 @@ public class DatabaseController{
 
 		//CommandDB ();
 	}
-	/*
+   /*
 	public DatabaseController(MonoBehaviour owner, IEnumerator target){
 		this.target = target;
 		this.coroutine = owner.StartCoroutine (Run ());
@@ -79,7 +84,39 @@ public class DatabaseController{
 	}
 	*/
 
-	public IEnumerator Login(string user, string password){
+   public IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney, int moneyPerSecond)
+   {
+      DateTime dt = DateTime.Now;
+      string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
+      string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&lastLogin=" + WWW.EscapeURL(strDate);
+      WWW wLogin = new WWW(url);
+		int id = -1, money = 0;
+		DateTime lastLogin = DateTime.Now;
+		TimeSpan timeDiff;
+      yield return wLogin;
+
+      if (wLogin.error != null)  // Some error
+         Debug.Log("Error at login");
+      else
+      {
+         if (wLogin.text != "")
+         {
+            Debug.Log(wLogin.text);
+            string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
+            //Get datas
+            int.TryParse(result[0], out id);
+            lastLogin = DateTime.Parse(result[1]);
+            int.TryParse(result[2], out money);
+         }
+			timeDiff = (dt - lastLogin);
+			int moneyEarn = (int)timeDiff.TotalSeconds * moneyPerSecond;
+         url = spendPlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money-spentMoney+moneyEarn).ToString());
+         wLogin = new WWW(url);
+			yield return wLogin;
+		}
+	}
+
+public IEnumerator Login(string user, string password){
 		DateTime dt = DateTime.Now;
 		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
 		Debug.Log ("Entered login");

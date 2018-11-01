@@ -53,8 +53,9 @@ public class CommanderBehaviour : MonoBehaviour
 
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.PlayerExists ("Jeff"));
-		StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
+		//StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
 		StartCoroutine(db.Login("Kamzu", "333"));
+        StartCoroutine(db.UpdatePlayerMoney("Kamzu", "333", 49000, 0));
     }
 
 	private IEnumerator RegisterPLayer(string user, string password){
