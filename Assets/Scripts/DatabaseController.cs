@@ -30,6 +30,8 @@ public class DatabaseController{
 	public bool isRunningPlayerExists = false;
 	public bool playerExistsReturn = false;
 
+	public bool isRunningRegisterPlayer = false;
+
 	/*
 	public Coroutine coroutine { get; private set; }
 	public object result;
@@ -145,14 +147,13 @@ public class DatabaseController{
 public IEnumerator Login(string user, string password){
 		DateTime dt = DateTime.Now;
 		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
-		Debug.Log ("Entered login");
+
 		// Post message
 		isRunningLogin = true;
-		Debug.Log ("Is running login");
+
 		string url = login + "user=" + WWW.EscapeURL (user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" + WWW.EscapeURL(strDate);
 		WWW wLogin = new WWW (url);
 		yield return wLogin;
-		Debug.Log ("Yielded is over");
 
 		if (wLogin.error != null)	// Some error
 			Debug.Log ("Error at login");
@@ -174,6 +175,7 @@ public IEnumerator Login(string user, string password){
 				//TODO Update lastLogin value
 				//TODO Send player datas to client
 				//idReturn = id;
+				isLoginSuccessfull = true;
 				isRunningLogin = false;
 				//Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
 
@@ -189,8 +191,10 @@ public IEnumerator Login(string user, string password){
 	}
 
 	public IEnumerator RegisterPlayer(string user, string password){
+		isRunningRegisterPlayer = true;
 		DateTime dt = DateTime.Now;
 		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
+		int team = 1;
 		//TODO Allocate player to a team
 		string url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
 			+ WWW.EscapeURL(strDate);
@@ -201,12 +205,16 @@ public IEnumerator Login(string user, string password){
 			Debug.Log ("Error at register.");
 		else {
 			if (wRegister.text == "Success") {
+				teamReturn = team;
+				moneyReturn = 0;
+				lastLoginReturn = dt;
 				Debug.Log ("Register successfull");
 			} else {
 				//Debug.Log ("Error on DB.");
 				Debug.Log("Possibly success. Check database.");
 			}
 		}
+		isRunningRegisterPlayer = false;
 	}
 
 	public IEnumerator PlayerExists(string user){

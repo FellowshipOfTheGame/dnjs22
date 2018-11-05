@@ -14,6 +14,8 @@ public class CommanderBehaviour : MonoBehaviour
     private double timer = 0;
     private Map map;
 
+	public UnityEngine.UI.Text DebugText;
+
 	//public GameObject databaseController;
 
 	/*
@@ -46,18 +48,6 @@ public class CommanderBehaviour : MonoBehaviour
 
         map = new Map(dist, towers, regions);
         SetupServer();
-
-		StartCoroutine(Command ());
-
-		StartCoroutine (RegisterPLayer ("Rose", "111"));
-
-		DatabaseController db = new DatabaseController ();
-		StartCoroutine (db.PlayerExists ("Jeff"));
-		//StartCoroutine (db.RegisterPlayer ("Kamzu", "333"));
-		StartCoroutine(db.Login("Kamzu", "333"));
-        //StartCoroutine(db.UpdatePlayerMoney("Kamzu", "333", 0, 0));
-        StartCoroutine(db.UpdatePlayerTroops("Kamzu", "333", 10, 0));
-
     }
 
 	private IEnumerator RegisterPLayer(string user, string password){
@@ -70,7 +60,26 @@ public class CommanderBehaviour : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Login(string user, string password, NetworkMessage netMsg){
+	//Login: se o player existe, loga. Se não existe, registra e loga.
+	/*
+	private IEnumerator Login(string user, string password, NetworkMessage netMsg, int i){
+		DatabaseController db = new DatabaseController ();
+		StartCoroutine (db.PlayerExists (user));
+		while (db.isRunningPlayerExists)
+			yield return null;
+		if (db.playerExistsReturn) {
+			MessageCommand msg = new MessageCommand ();
+			msg.player = db.idReturn;
+			msg.password = password;
+			msg.team = db.teamReturn;
+			msg.money = db.moneyReturn;
+			msg.lastLogin = String.Format("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
+		}
+		onHold.RemoveAt (i);
+	}*/
+
+	private IEnumerator Login(string user, string password, NetworkMessage netMsg, int i){
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.Login (user, password));
 		while (db.isRunningLogin)
@@ -81,9 +90,21 @@ public class CommanderBehaviour : MonoBehaviour
 			msg.password = password;
 			msg.team = db.teamReturn;
 			msg.money = db.moneyReturn;
-			msg.lastLogin = String.Format("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			msg.lastLogin = String.Format ("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
+			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
+		} else {
+			StartCoroutine (db.RegisterPlayer (user, "42"));
+			while (db.isRunningRegisterPlayer)
+				yield return null;
+			
+			MessageCommand msg = new MessageCommand ();
+			msg.password = "42";
+			msg.team = db.teamReturn;
+			msg.money = db.moneyReturn;
+			msg.lastLogin = String.Format ("{0:yyyy/M/d HH:mm:ss}", db.lastLoginReturn);
 			netMsg.conn.Send (MyMsgType.LoginSuccessfull, new StringMessage (JsonConvert.SerializeObject (msg)));
 		}
+		onHold.RemoveAt (i);
 	}
 	/*
 	private FinishLogin(string user, string password){
@@ -93,17 +114,22 @@ public class CommanderBehaviour : MonoBehaviour
 	private IEnumerator Command(){
 		DatabaseController db = new DatabaseController ();
 		Debug.Log ("Instantiated at commanderbehaviour");
+		DebugText.text += "\nInstantiated at commanderbehaviour";
 		int id = 0;
 		Debug.Log ("id = 0 at commanderbehaviour");
+		DebugText.text += "\nid = 0 at commanderbehaviour";
 		StartCoroutine (db.Login("Edson", "123"));
 		//StartCoroutine (Command (db));
 		Debug.Log ("Started coroutine at commanderbehaviour");
+		DebugText.text += "\nStarted coroutine at commanderbehaviour";
 		while (db.isRunningLogin) {
 			yield return null;
 			Debug.Log ("Loop waiting at commanderbehaviour");
+			DebugText.text += "\nLoop waiting at commanderbehaviour";
 		}
 		id = db.idReturn;
 		Debug.Log ("id at commanderbehaviour = " + id);
+		DebugText.text += "\nid at commanderbehaviour = " + id;
 	}
 
     void Update()
@@ -112,19 +138,23 @@ public class CommanderBehaviour : MonoBehaviour
         {
             for (int i = onHold.Count - 1; i >= 0; i--)
             {
-				if (onHold [i].user != null && onHold [i].user != "" && onHold [i].password != null && onHold [i].password != "") {
-					StartCoroutine(Login (onHold [i].user, onHold [i].password, onHold[i].netMsg));
+				if (onHold [i].user != null && onHold [i].user != "" /*&& onHold [i].password != null && onHold [i].password != ""*/) {
+					StartCoroutine(Login (onHold [i].user, onHold [i].password, onHold[i].netMsg, i));
 				}
 
 				if (DateTime.Now >= onHold[i].issue.AddSeconds(onHold[i].cost))
                 {
                     // Run command
                     Debug.Log("Rodou o comando");
+					DebugText.text += "\nRodou o comando";
+
                     onHold.RemoveAt(i);
                 }
                 else
                 {
                     Debug.Log("Não rodou");
+					DebugText.text += "\nNão rodou";
+
                 }
             }
             timer -= checkCommands;
@@ -157,6 +187,7 @@ public class CommanderBehaviour : MonoBehaviour
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MyMsgType.MessageCommand, OnServerReadyToBeginMessage);
         Debug.Log("Created server");
+		DebugText.text += "\nCreated server";
     }
 
     void OnServerReadyToBeginMessage(NetworkMessage netMsg)
@@ -182,14 +213,23 @@ public class CommanderBehaviour : MonoBehaviour
 				// Return player money
 				netMsg.conn.Send (MyMsgType.BoughtSuccesfull, new IntegerMessage (30));
 			}
-		} else if (msg.type == 2) {
+		} else if (msg.type == 2) {	//Login
 			Command hold = new Command ();
 			hold.player = msg.player;
 			hold.password = msg.password;
 			hold.netMsg = netMsg;
 
-			if(PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull){
+			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
 				netMsg.conn.Send (MyMsgType.LoginSuccessfull, new IntegerMessage (1));
+			}
+		} else if (msg.type == 3) {	// Era pra register
+			Command hold = new Command ();
+			hold.player = msg.player;
+			hold.password = msg.password;
+			hold.netMsg = netMsg;
+
+			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
+				netMsg.conn.Send (MyMsgType.RegisterSuccessfull, new IntegerMessage (1));
 			}
 		}
     }
