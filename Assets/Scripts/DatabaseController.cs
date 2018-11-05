@@ -9,6 +9,10 @@ public class DatabaseController{
 	private string login = "http://localhost/dnjs22/Login.php?";
 	private string registerPlayer = "http://localhost/dnjs22/RegisterPlayer.php?";
 	private string playerExists = "http://localhost/dnjs22/PlayerExists.php?";
+	private string updatePlayerMoney = "http://localhost/dnjs22/UpdatePlayerMoney.php?";
+	private string updatePlayerTroops = "http://localhost/dnjs22/UpdatePlayerTroops.php?";
+	private string getPlayerData = "http://localhost/dnjs22/GetPlayerData.php?";
+	private string updatePlayerLastLogin = "http://localhost/dnjs22/UpdatePlayerLastLogin.php?";
 	private string registerTeam = "http://localhost/dnjs22/RegisterTeam.php?";
 	private string registerTower = "http://localhost/dnjs22/RegisterTower.php?";
 	private string registerEdge = "http://localhost/dnjs22/RegisterEdge.php?";
@@ -60,7 +64,7 @@ public class DatabaseController{
 
 		//CommandDB ();
 	}
-	/*
+   /*
 	public DatabaseController(MonoBehaviour owner, IEnumerator target){
 		this.target = target;
 		this.coroutine = owner.StartCoroutine (Run ());
@@ -81,7 +85,66 @@ public class DatabaseController{
 	}
 	*/
 
-	public IEnumerator Login(string user, string password){
+	public IEnumerator UpdatePlayerTroops(string user, string password, int receiveTroops, int sendTroops)
+   {
+      string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
+      WWW wLogin = new WWW(url);
+		int id = -1, troops = 0, troopDiff = 0;
+      yield return wLogin;
+
+      if (wLogin.error != null)  // Some error
+         Debug.Log("Error at login");
+      else
+      {
+         if (wLogin.text != "")
+         {
+            Debug.Log(wLogin.text);
+            string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
+            //Get datas
+            int.TryParse(result[0], out id);
+            int.TryParse(result[5], out troops);
+         }
+			troopDiff = (troops - sendTroops + receiveTroops);
+         url = updatePlayerTroops + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&troops=" + WWW.EscapeURL(troopDiff.ToString());
+         wLogin = new WWW(url);
+			yield return wLogin;
+		}
+	}
+
+
+   public IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney, int moneyPerSecond)
+   {
+      DateTime dt = DateTime.Now;
+      string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
+      string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
+      WWW wLogin = new WWW(url);
+		int id = -1, money = 0;
+		DateTime lastLogin = DateTime.Now;
+		TimeSpan timeDiff;
+      yield return wLogin;
+
+      if (wLogin.error != null)  // Some error
+         Debug.Log("Error at login");
+      else
+      {
+         if (wLogin.text != "")
+         {
+            Debug.Log(wLogin.text);
+            string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
+            //Get datas
+            int.TryParse(result[0], out id);
+            lastLogin = DateTime.Parse(result[1]);
+            int.TryParse(result[2], out money);
+         }
+			timeDiff = (dt - lastLogin);
+			int moneyEarn = (int)timeDiff.TotalSeconds * moneyPerSecond;
+         url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money-spentMoney+moneyEarn).ToString());
+         wLogin = new WWW(url);
+			yield return wLogin;
+		}
+	}
+
+public IEnumerator Login(string user, string password){
 		DateTime dt = DateTime.Now;
 		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
 
@@ -102,11 +165,8 @@ public class DatabaseController{
 				//Get datas
 				int.TryParse (result [0], out idReturn);
 				//DateTime lastLogin;
-				/*
-				if(result[1] == "")
-					lastLoginReturn = DateTime.Now;
-				else*/
-					lastLoginReturn = Convert.ToDateTime (result [1]);
+			
+				lastLoginReturn = Convert.ToDateTime (result [1]);
 				int.TryParse (result [2], out moneyReturn);
 				string playerPassword = result [3];
 				int.TryParse (result [4], out teamReturn);
@@ -120,6 +180,9 @@ public class DatabaseController{
 				//Debug.Log ("id = " + id + "lastLogin = " + lastLogin.ToString () + "money = " + money + "user = " + playerUser);
 
 				//yield return "id = " + id;
+				 url = updatePlayerLastLogin + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&lastLogin=" + WWW.EscapeURL(strDate);
+         	wLogin = new WWW(url);
+				yield return wLogin;
 			} else // null result
 				Debug.Log ("Player not found.");
 		}
