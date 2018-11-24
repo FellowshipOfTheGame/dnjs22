@@ -184,6 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MenuManager: {fileID: 1570254417}
   UniqueID: 
+  team: 0
+  money: 0
 --- !u!1001 &86511206
 Prefab:
   m_ObjectHideFlags: 0
