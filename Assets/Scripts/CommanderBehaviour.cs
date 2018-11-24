@@ -89,6 +89,11 @@ public class CommanderBehaviour : MonoBehaviour
 			yield return null;
 
 		if(db.playerExistsReturn){	// If exists, starts login routine
+			StartCoroutine(db.UpdatePlayerMoney(user, password, 0, 5));
+			while(db.isRunningUpdatePlayerMoney)
+				yield return null;
+
+			Debug.Log("PlayerExistsReturn");
 			StartCoroutine (db.Login (user, password));
 			while (db.isRunningLogin)
 				yield return null;
@@ -105,6 +110,7 @@ public class CommanderBehaviour : MonoBehaviour
 			else
 				netMsg.conn.Send(MyMsgType.MessageCommand, new StringMessage("Error"));
 		} else{	// If doesn't exist, starts register and login 
+			Debug.Log("Player doesn't exist return");
 			StartCoroutine (db.RegisterPlayer (user, "42"));
 			while (db.isRunningRegisterPlayer)
 				yield return null;
@@ -199,8 +205,7 @@ public class CommanderBehaviour : MonoBehaviour
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MyMsgType.MessageCommand, OnServerReadyToBeginMessage);
 		//NetworkServer.RegisterHandler(MyMsgType.Login, OnServerReadyToBeginMessage);
-        Debug.Log("Created server");
-		DebugText.text += "\nCreated server";
+		Debug.Log("Created server");
     }
 
     void OnServerReadyToBeginMessage(NetworkMessage netMsg)

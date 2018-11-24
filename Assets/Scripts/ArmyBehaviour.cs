@@ -95,6 +95,7 @@ public class ArmyBehaviour : MonoBehaviour
 	private void Login(){
 		MessageCommand msg = new MessageCommand();
 		msg.player = UniqueID;
+		msg.user = UniqueID;
 		msg.type = 2;
 		myClient.Send (MyMsgType.MessageCommand, new StringMessage (JsonConvert.SerializeObject (msg)));
 	}

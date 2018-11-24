@@ -33,6 +33,8 @@ public class DatabaseController{
 	public bool isRunningRegisterPlayer = false;
 	public bool isRegisterSuccessfull = false;
 
+	public bool isRunningUpdatePlayerMoney = false;
+
 	//private int get
 	/*
 	public Coroutine coroutine { get; private set; }
@@ -116,6 +118,7 @@ public class DatabaseController{
 
    public IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney, int moneyPerSecond)
    {
+	   isRunningUpdatePlayerMoney = true;
       DateTime dt = DateTime.Now;
       string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
       string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
@@ -140,10 +143,13 @@ public class DatabaseController{
          }
 			timeDiff = (dt - lastLogin);
 			int moneyEarn = (int)timeDiff.TotalSeconds * moneyPerSecond;
-         url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money-spentMoney+moneyEarn).ToString());
+         url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money-spentMoney+moneyEarn).ToString())
+		 + "&lastLogin" + WWW.EscapeURL(strDate);
          wLogin = new WWW(url);
 			yield return wLogin;
 		}
+
+		isRunningUpdatePlayerMoney = false;
 	}
 
 public IEnumerator Login(string user, string password){
