@@ -14,6 +14,7 @@ create table Player(
     money int not null default 0,
     team int not null,
     lastLogin datetime,
+	troops int not null default 0,
     primary key(id),
     foreign key(team) references Team(id)
 );

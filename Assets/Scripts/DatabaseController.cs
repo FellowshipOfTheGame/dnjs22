@@ -31,7 +31,9 @@ public class DatabaseController{
 	public bool playerExistsReturn = false;
 
 	public bool isRunningRegisterPlayer = false;
+	public bool isRegisterSuccessfull = false;
 
+	//private int get
 	/*
 	public Coroutine coroutine { get; private set; }
 	public object result;
@@ -183,8 +185,10 @@ public IEnumerator Login(string user, string password){
 				 url = updatePlayerLastLogin + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&lastLogin=" + WWW.EscapeURL(strDate);
          	wLogin = new WWW(url);
 				yield return wLogin;
-			} else // null result
+			} else{ // null result
+				isLoginSuccessfull = false;
 				Debug.Log ("Player not found.");
+			}
 		}
 		Debug.Log ("Exit");
 		isRunningLogin = false;
@@ -205,11 +209,13 @@ public IEnumerator Login(string user, string password){
 			Debug.Log ("Error at register.");
 		else {
 			if (wRegister.text == "Success") {
+				isRegisterSuccessfull = true;
 				teamReturn = team;
 				moneyReturn = 0;
 				lastLoginReturn = dt;
 				Debug.Log ("Register successfull");
 			} else {
+				isRegisterSuccessfull = false;
 				//Debug.Log ("Error on DB.");
 				Debug.Log("Possibly success. Check database.");
 			}
