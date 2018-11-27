@@ -34,6 +34,7 @@ public class DatabaseController{
 	public bool isRegisterSuccessfull = false;
 
 	public bool isRunningUpdatePlayerMoney = false;
+    public bool playerWasAbleToBuySomeTroopsToHisArmy = false;
 
 	//private int get
 	/*
@@ -68,89 +69,101 @@ public class DatabaseController{
 
 		//CommandDB ();
 	}
-   /*
-	public DatabaseController(MonoBehaviour owner, IEnumerator target){
-		this.target = target;
-		this.coroutine = owner.StartCoroutine (Run ());
-	}
+    /*
+     public DatabaseController(MonoBehaviour owner, IEnumerator target){
+         this.target = target;
+         this.coroutine = owner.StartCoroutine (Run ());
+     }
 
-	private IEnumerator Run(){
-		while (target.MoveNext ()) {
-			result = target.Current;
-			yield return result;
-		}
-	}
-
-	private IEnumerator CommandDB(){
-		DatabaseController db = new DatabaseController (this, RegisterPlayer ("Edson", "123"));
-		yield return db.coroutine;
-
-		Debug.Log ("At CommanderBehaviour: id = " + db.result);
-	}
-	*/
-
-	public IEnumerator UpdatePlayerTroops(string user, string password, int receiveTroops, int sendTroops)
-   {
-      string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
-      WWW wLogin = new WWW(url);
-		int id = -1, troops = 0, troopDiff = 0;
-      yield return wLogin;
-
-      if (wLogin.error != null)  // Some error
-         Debug.Log("Error at login");
-      else
-      {
-         if (wLogin.text != "")
-         {
-            Debug.Log(wLogin.text);
-            string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
-            //Get datas
-            int.TryParse(result[0], out id);
-            int.TryParse(result[5], out troops);
+     private IEnumerator Run(){
+         while (target.MoveNext ()) {
+             result = target.Current;
+             yield return result;
          }
-			troopDiff = (troops - sendTroops + receiveTroops);
-         url = updatePlayerTroops + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&troops=" + WWW.EscapeURL(troopDiff.ToString());
-         wLogin = new WWW(url);
-			yield return wLogin;
-		}
-	}
+     }
+
+     private IEnumerator CommandDB(){
+         DatabaseController db = new DatabaseController (this, RegisterPlayer ("Edson", "123"));
+         yield return db.coroutine;
+
+         Debug.Log ("At CommanderBehaviour: id = " + db.result);
+     }
+     */
+
+    public IEnumerator UpdatePlayerTroops(string user, string password, int receiveTroops, int sendTroops) {
+        string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
+        WWW wLogin = new WWW(url);
+        Debug.Log("WLOGIN+++++++++ " + url);
+        int id = -1, troops = 0, troopDiff = 0;
+        yield return wLogin;
+
+        if (wLogin.error != null)  // Some error
+            Debug.Log("Error at login");
+        else {
+            if (wLogin.text != "") {
+                Debug.Log(wLogin.text);
+                string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
+                //Get datas
+                int.TryParse(result[0], out id);
+                int.TryParse(result[5], out troops);
+                Debug.Log("->>>>>>>>>>>>>>>>>> Troops Diff" + troopDiff);
+            }
+            troopDiff = (troops - sendTroops + receiveTroops);
+            if (troopDiff >= 0) {
+                Debug.Log("->>>>>>>>>>>>>>>>>> Troops Diff" + troopDiff);
+                url = updatePlayerTroops + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&troops=" + WWW.EscapeURL(troopDiff.ToString());
+                wLogin = new WWW(url);
+                yield return wLogin;
+            }
+        }
+    }
 
 
-   public IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney, int moneyPerSecond)
-   {
-	   isRunningUpdatePlayerMoney = true;
-      DateTime dt = DateTime.Now;
-      string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
-      string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
-      WWW wLogin = new WWW(url);
-		int id = -1, money = 0;
-		DateTime lastLogin = DateTime.Now;
-		TimeSpan timeDiff;
-      yield return wLogin;
+    public IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney, int moneyPerSecond) {
+        isRunningUpdatePlayerMoney = true;
+        DateTime dt = DateTime.Now;
+        string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
+        string url = getPlayerData + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password);
+        WWW wLogin = new WWW(url);
+        int id = -1, money = 0;
+        DateTime lastLogin = DateTime.Now;
+        TimeSpan timeDiff;
+        yield return wLogin;
 
-      if (wLogin.error != null)  // Some error
-         Debug.Log("Error at login");
-      else
-      {
-         if (wLogin.text != "")
-         {
-            Debug.Log(wLogin.text);
-            string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
-            //Get datas
-            int.TryParse(result[0], out id);
-            lastLogin = DateTime.Parse(result[1]);
-            int.TryParse(result[2], out money);
-         }
-			timeDiff = (dt - lastLogin);
-			int moneyEarn = (int)timeDiff.TotalSeconds * moneyPerSecond;
-         url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money-spentMoney+moneyEarn).ToString())
-		 + "&lastLogin" + WWW.EscapeURL(strDate);
-         wLogin = new WWW(url);
-			yield return wLogin;
-		}
+        if (wLogin.error != null)  // Some error
+            Debug.Log("Error at login");
+        else {
+            if (wLogin.text != "") {
+                Debug.Log(wLogin.text);
+                string[] result = wLogin.text.Split(new string[] { "|" }, StringSplitOptions.None);
+                //Get datas
+                int.TryParse(result[0], out id);
+                lastLogin = DateTime.Parse(result[1]);
+                int.TryParse(result[2], out money);
+            }
+            timeDiff = (dt - lastLogin);
+            int moneyEarn = (int)timeDiff.TotalSeconds * moneyPerSecond;
+            if ((money - spentMoney + moneyEarn) >= 0) {
+                Debug.Log("Player Can Buy Troops");
+                playerWasAbleToBuySomeTroopsToHisArmy = true;
+                url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money - spentMoney + moneyEarn).ToString());
+                wLogin = new WWW(url);
+                yield return wLogin;
+            } else {
+                Debug.Log("Player Cant Buy Troops");
+                playerWasAbleToBuySomeTroopsToHisArmy = false;
+                url = updatePlayerMoney + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&money=" + WWW.EscapeURL((money + moneyEarn).ToString());
+                wLogin = new WWW(url);
+                yield return wLogin;
+            }
 
-		isRunningUpdatePlayerMoney = false;
-	}
+            url = updatePlayerLastLogin + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL(password) + "&lastLogin=" + WWW.EscapeURL(strDate);
+            wLogin = new WWW(url);
+            yield return wLogin;
+        }
+
+        isRunningUpdatePlayerMoney = false;
+    }
 
 public IEnumerator Login(string user, string password){
 		DateTime dt = DateTime.Now;
@@ -165,7 +178,7 @@ public IEnumerator Login(string user, string password){
 
 		if (wLogin.error != null)	// Some error
 			Debug.Log ("Error at login");
-		else {
+		else {            
 			if (wLogin.text != "") {
 				Debug.Log (wLogin.text);
 				string[] result = wLogin.text.Split (new string[] {"|"}, StringSplitOptions.None);

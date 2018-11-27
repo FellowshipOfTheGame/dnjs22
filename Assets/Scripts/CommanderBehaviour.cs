@@ -60,9 +60,31 @@ public class CommanderBehaviour : MonoBehaviour
 		}
 	}
 
-	
-	//Login: se o player existe, loga. Se não existe, registra e loga.
-	/*
+    private IEnumerator UpdatePlayerMoney(string user, string password, int spentMoney = 250) {
+        DatabaseController db = new DatabaseController();
+        StartCoroutine(db.UpdatePlayerMoney(user, password, spentMoney, 5));
+        yield return null;
+    }
+
+    private IEnumerator BuyPlayerTroops(string user, string password, int quantity = 1) {
+        DatabaseController db = new DatabaseController();
+        Debug.Log("---------------> UPDATING PLAYER MONEY ON BUY TROOP");
+        StartCoroutine(UpdatePlayerMoney(user, password, 250 * quantity));
+        while (db.isRunningUpdatePlayerMoney) {
+            yield return null;
+        }
+        StartCoroutine(db.UpdatePlayerTroops(user, password, quantity, 0));
+    }
+
+    private IEnumerator SpendPlayerTroops(string user, string password, int quantity = 1) {
+        DatabaseController db = new DatabaseController();
+        Debug.Log("---------------> SPENDING PLAYER TROOP");
+        StartCoroutine(db.UpdatePlayerTroops(user, password, 0, quantity));
+        yield return null;
+    }
+
+    //Login: se o player existe, loga. Se não existe, registra e loga.
+    /*
 	private IEnumerator Login(string user, string password, NetworkMessage netMsg, int i){
 		DatabaseController db = new DatabaseController ();
 		StartCoroutine (db.PlayerExists (user));
@@ -80,7 +102,7 @@ public class CommanderBehaviour : MonoBehaviour
 		onHold.RemoveAt (i);
 	}*/
 
-	private IEnumerator Login(string user, string password, NetworkMessage netMsg){
+    private IEnumerator Login(string user, string password, NetworkMessage netMsg){
 		DatabaseController db = new DatabaseController ();
 
 		// Check if the given user is registered
@@ -213,26 +235,32 @@ public class CommanderBehaviour : MonoBehaviour
         string beginMessage = netMsg.ReadMessage<StringMessage>().value;
         MessageCommand msg = JsonConvert.DeserializeObject<MessageCommand>(beginMessage);
 
-		if (msg.type == 0) {
-			Command hold = new Command ();
-			hold.issue = msg.issue;
-			hold.player = msg.player;
-			hold.target = msg.target;
-			hold.troop = msg.troop;
+        if (msg.type == 0) {
+            Command hold = new Command();
+            hold.issue = msg.issue;
+            hold.player = msg.player;
+            hold.target = msg.target;
+            hold.troop = msg.troop;
 
-			// Check command cost
-			hold.cost = 10;
+            // Check command cost
+            hold.cost = 10;
 
-			if (PutOnHold (hold) == MyMsgType.CommandAddedSuccesfull) {
-				netMsg.conn.Send (MyMsgType.AddedSuccesfull, new IntegerMessage (hold.cost));
-			}
-		} else if (msg.type == 1) {
-			if (BuyTroop (msg) == MyMsgType.CommandAddedSuccesfull) {
-				// Return player money
-				netMsg.conn.Send (MyMsgType.BoughtSuccesfull, new IntegerMessage (30));
-			}
-		} else if (msg.type == 2) 	//Login
-			StartCoroutine(Login(msg.user, msg.password, netMsg));
+            if (PutOnHold(hold) == MyMsgType.CommandAddedSuccesfull) {
+                netMsg.conn.Send(MyMsgType.AddedSuccesfull, new IntegerMessage(hold.cost));
+            }
+        } else if (msg.type == 1) {
+            //if (BuyTroop(msg) == MyMsgType.CommandAddedSuccesfull) {
+            // Return player money
+            //netMsg.conn.Send(MyMsgType.BoughtSuccesfull, new IntegerMessage(30));
+            Debug.Log("----------------> Buy Troops");
+            StartCoroutine(BuyPlayerTroops(msg.user, msg.password));
+            //}
+        } else if (msg.type == 2) { //Login
+            StartCoroutine(Login(msg.user, msg.password, netMsg));
+        } else if (msg.type == 3) {
+            Debug.Log("----------------> Spend Troops");
+            StartCoroutine(SpendPlayerTroops(msg.user, msg.password));
+        }
 		/* 
 		} else if (msg.type == 3) {	// Era pra register
 			Command hold = new Command ();
