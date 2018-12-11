@@ -25,7 +25,7 @@ public class UIActions : MonoBehaviour {
 	}
 
 	public void ChangeScreen(GameObject screen){
-		CurrentScreen?.SetActive(false);
+		if(CurrentScreen != null) CurrentScreen.SetActive(false);
 		screen.SetActive(true);
 		CurrentScreen = screen;
 	}
