@@ -42,11 +42,7 @@ public class CommanderBehaviour : MonoBehaviour
             new Tower()
         };
 
-        Region[] regions = new Region[] {
-            new Region()
-        };
-
-        map = new Map(dist, towers, regions);
+        map = new Map(dist, towers );
         SetupServer();
     }
 
@@ -113,23 +109,18 @@ public class CommanderBehaviour : MonoBehaviour
 	*/
 	private IEnumerator Command(){
 		DatabaseController db = new DatabaseController ();
-		Debug.Log ("Instantiated at commanderbehaviour");
-		DebugText.text += "\nInstantiated at commanderbehaviour";
+		Log("Instantiated at commanderbehaviour");
 		int id = 0;
-		Debug.Log ("id = 0 at commanderbehaviour");
-		DebugText.text += "\nid = 0 at commanderbehaviour";
+		Log("id = 0 at commanderbehaviour");
 		StartCoroutine (db.Login("Edson", "123"));
 		//StartCoroutine (Command (db));
-		Debug.Log ("Started coroutine at commanderbehaviour");
-		DebugText.text += "\nStarted coroutine at commanderbehaviour";
+		Log ("Started coroutine at commanderbehaviour");
 		while (db.isRunningLogin) {
 			yield return null;
-			Debug.Log ("Loop waiting at commanderbehaviour");
-			DebugText.text += "\nLoop waiting at commanderbehaviour";
+			Log ("Loop waiting at commanderbehaviour");
 		}
 		id = db.idReturn;
-		Debug.Log ("id at commanderbehaviour = " + id);
-		DebugText.text += "\nid at commanderbehaviour = " + id;
+		Log ("id at commanderbehaviour = " + id);
 	}
 
     void Update()
@@ -145,15 +136,13 @@ public class CommanderBehaviour : MonoBehaviour
 				if (DateTime.Now >= onHold[i].issue.AddSeconds(onHold[i].cost))
                 {
                     // Run command
-                    Debug.Log("Rodou o comando");
-					DebugText.text += "\nRodou o comando";
+                    Log("Rodou o comando");
 
                     onHold.RemoveAt(i);
                 }
                 else
                 {
-                    Debug.Log("Não rodou");
-					DebugText.text += "\nNão rodou";
+                    Log("Não rodou");
 
                 }
             }
@@ -177,17 +166,12 @@ public class CommanderBehaviour : MonoBehaviour
         return MyMsgType.CommandAddedSuccesfull;
     }
 
-	/*
-	int Login(MessageCommand msg){
-
-	}
-	*/
+	
     public void SetupServer()
     {
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MyMsgType.MessageCommand, OnServerReadyToBeginMessage);
-        Debug.Log("Created server");
-		DebugText.text += "\nCreated server";
+        Log("Created server");
     }
 
     void OnServerReadyToBeginMessage(NetworkMessage netMsg)
@@ -233,4 +217,10 @@ public class CommanderBehaviour : MonoBehaviour
 			}
 		}
     }
+
+	private void Log(string text){
+		Debug.Log(text);
+		DebugText.text += text+"\n";
+	}
+
 }

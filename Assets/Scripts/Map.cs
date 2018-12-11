@@ -7,7 +7,6 @@ public class Map
 
     private int[,] distance;
     private Tower[] towers;
-    private Region[] regions;
 
     public int vertexNumber, edgeNumber, minimumEdge, maximumEdge;
 
@@ -15,11 +14,10 @@ public class Map
 
     #region Methods
 
-    public Map(int[,] distance, Tower[] towers, Region[] regions)
+    public Map(int[,] distance, Tower[] towers )
     {
         this.distance = distance;
         this.towers = towers;
-        this.regions = regions;
     }
 
     public int[,] Distance
@@ -43,18 +41,6 @@ public class Map
         set
         {
             towers = value;
-        }
-    }
-
-    public Region[] Regions
-    {
-        get
-        {
-            return regions;
-        }
-        set
-        {
-            regions = value;
         }
     }
 
