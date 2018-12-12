@@ -19,6 +19,7 @@ public class DatabaseController{
 	private string updateEdge = "http://localhost/dnjs22/UpdateEdge.php?";
 	private string updateTower = "http://localhost/dnjs22/UpdateTower.php?";
 	private string getTower = "http://localhost/dnjs22/GetTower.php?";
+	private string getMinimumTeam = "http://localhost/dnjs22/GetMinimumTeam.php";
 
 	//public static DatabaseController instance = null;
 
@@ -213,30 +214,43 @@ public IEnumerator Login(string user, string password){
 		isRunningLogin = false;
 	}
 
+	// NEWNEWNEWNEWNWENWENWENWENWENWNEWN
 	public IEnumerator RegisterPlayer(string user, string password){
 		isRunningRegisterPlayer = true;
 		DateTime dt = DateTime.Now;
 		string strDate = String.Format("{0:yyyy/M/d HH:mm:ss}", dt);
-		int team = 1;
-		//TODO Allocate player to a team
-		string url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
-			+ WWW.EscapeURL(strDate);
-		WWW wRegister = new WWW (url);
-		yield return wRegister;
+		
+		// Find minimum team
+		string url = getMinimumTeam;
+		WWW wMinimumTeam = new WWW(url);
+		yield return wMinimumTeam;
 
-		if (wRegister.error != null)
-			Debug.Log ("Error at register.");
-		else {
-			if (wRegister.text == "Success") {
-				isRegisterSuccessfull = true;
-				teamReturn = team;
-				moneyReturn = 0;
-				lastLoginReturn = dt;
-				Debug.Log ("Register successfull");
-			} else {
-				isRegisterSuccessfull = false;
-				//Debug.Log ("Error on DB.");
-				Debug.Log("Possibly success. Check database.");
+		if(wMinimumTeam.error != null)
+			Debug.Log("Error at getting minimum team.");
+		else{
+			int team;
+			int.TryParse(wMinimumTeam.text, out team);
+			Debug.Log("Team = " + team);
+
+			url = registerPlayer + "user=" + WWW.EscapeURL(user) + "&pswd=" + WWW.EscapeURL (password) + "&lastLogin=" 
+			+ WWW.EscapeURL(strDate) + "&team=" + WWW.EscapeURL(wMinimumTeam.text);
+			WWW wRegister = new WWW (url);
+			yield return wRegister;
+
+			if (wRegister.error != null)	// If some error
+				Debug.Log ("Error at register.");
+			else {
+				if (wRegister.text == "Success") {	// If register success
+					isRegisterSuccessfull = true;
+					teamReturn = team;
+					moneyReturn = 0;
+					lastLoginReturn = dt;
+					Debug.Log ("Register successfull");
+				} else {	// If some error at registering
+					isRegisterSuccessfull = false;
+					//Debug.Log ("Error on DB.");
+					Debug.Log("Possibly success. Check database.");
+				}
 			}
 		}
 		isRunningRegisterPlayer = false;
